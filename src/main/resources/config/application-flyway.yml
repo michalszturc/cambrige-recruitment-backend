@@ -1,0 +1,16 @@
+
+db:
+  host: localhost
+  port: 5432
+  name:
+  user: dbuser
+  pass:
+
+spring.flyway:
+  enabled: true
+  schemas: flyway
+  sql-migration-separator: __
+  user: postgres
+  password: postgres
+  url: jdbc:postgresql://${db.host}:${db.port}/${db.name}
+  locations: classpath:/db

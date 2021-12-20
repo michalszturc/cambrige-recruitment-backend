@@ -1,0 +1,17 @@
+management:
+  server:
+    port: 8080
+
+db:
+  host: localhost
+  port: 5432
+  name:
+  user: dbuser
+  pass:
+
+spring:
+  datasource:
+    url: jdbc:postgresql://${db.host}:${db.port}/${db.name}
+    username: ${db.user}
+    password: ${db.pass}
+    driver-class-name: org.postgresql.Driver

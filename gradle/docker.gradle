@@ -1,0 +1,43 @@
+buildscript {
+    repositories {
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath 'com.bmuschko:gradle-docker-plugin:7.1.0'
+    }
+}
+
+apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
+
+import com.bmuschko.gradle.docker.tasks.image.*
+import com.bmuschko.gradle.docker.DockerRegistryCredentials
+
+docker{
+    if (System.env.GITLAB_CI) {
+        url = "https://docker:2375"
+    }
+}
+task copyJar(type: Copy) {
+    dependsOn assemble
+    from file("${buildDir}/libs/${project.name}-${project.version}.jar")
+    into file("${buildDir}/docker")
+}
+
+task copyDockerfile(type: Copy) {
+    mustRunAfter copyJar
+    from rootProject.file('Dockerfile')
+    into buildDir.absolutePath + '/docker'
+}
+
+
+task buildImage(type: DockerBuildImage) {
+    dependsOn copyDockerfile, copyJar
+
+    inputDir = file("${buildDir}/docker")
+    images.addAll([
+            "${project.group}/${project.name}:latest"
+    ])
+    remove = true
+    pull = true
+}
+

@@ -1,0 +1,8 @@
+task copySqlScriptsToResources(type: Copy) {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    mustRunAfter "processResources"
+    from "db/sql"
+    into sourceSets.main.output.resourcesDir.path + '/db'
+}
+
+project.tasks.classes.dependsOn copySqlScriptsToResources
